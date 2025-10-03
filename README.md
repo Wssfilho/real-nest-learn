@@ -46,8 +46,6 @@ npx prisma init
 npx prisma migrate dev
 ```
 
-### 6. Criar os Módulos
-https://www.canva.com/design/DAGMvbkSn34/xndrj2HETBwdmhntErOznw/edit?utm_content=DAGMvbkSn34&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
 ### Criação do Serviço
 ``` powershell
