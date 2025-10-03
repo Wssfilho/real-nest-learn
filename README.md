@@ -1,6 +1,5 @@
 # HeroAPI
-API construída em Nest.JS para o cadastro de uma base geral de Super Heróis. 
-</br>Acesse o vídeo aqui: https://www.youtube.com/watch?v=P-bUX8XQHwc&t=1734s
+API construída em Nest.JS para o cadastro de uma base geral de Super Heróis.
 
 
 ---
