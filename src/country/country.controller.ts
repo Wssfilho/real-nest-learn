@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Post, Res, } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put, Res, } from '@nestjs/common';
 import { CountryService } from './country.service';
 import { CountryDto } from './dto/country.dto';
 
@@ -9,27 +9,20 @@ export class CountryController {
 
     @Get()
     async getAll() {
-        const country = await this.coutryService.getAll();
-        if (!country) {
-            throw new HttpException('country not created', HttpStatus.BAD_REQUEST);
+        return await this.coutryService.getAll();
 
-        }
-        return {
-            sucess: true,
-            message: 'found',
-            data: country,
-        }
     }
     @Post()
-    async create(@Body() data: CountryDto, @Res() res: Response) {
-        const country = this.coutryService.create(data)
-        if (!country) {
-            throw new HttpException('country not created', HttpStatus.NOT_FOUND);
-        }
-        return {
-            success: true,
-            message: 'created',
-            data: country,
-        };
+    //@HttpCode(HttpStatus.OK)
+    async create(@Body() data: CountryDto) {
+        return await this.coutryService.create(data)
+
     }
+    @Put(":id")
+    async update(@Param("id") id: number, @Body() data: CountryDto) {
+        const country = this.coutryService.update(Number(id), data);
+        return country
+
+    }
+
 }
