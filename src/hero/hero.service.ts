@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { HeroDto } from './dto/hero.dto';
+import { HeroDto } from '../dtos/hero.dto';
 import { PrismaService } from 'src/databases/prisma.service';
 import { error } from 'console';
 import { Hero } from '@prisma/client';

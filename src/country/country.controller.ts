@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put, Res, } from '@nestjs/common';
 import { CountryService } from './country.service';
-import { CountryDto } from './dto/country.dto';
+import { CountryDto } from '../dtos/country.dto';
 
 @Controller('country')
 export class CountryController {
