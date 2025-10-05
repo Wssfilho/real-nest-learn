@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { HeroDto } from './dto/hero.dto';
 import { PrismaService } from 'src/databases/prisma.service';
 import { error } from 'console';
@@ -9,13 +9,22 @@ import { Hero } from '@prisma/client';
 export class HeroService {
     constructor(private prisma: PrismaService) { }
     async create(data: HeroDto) {
+        const { heroName } = data
+        const findHero = await this.prisma.hero.findFirst(
+            {
+                where: {
+                    heroName: heroName,
+                }
+            }
+        )
+        if (findHero) throw new ConflictException('hero already exist')
         const hero = await this.prisma.hero.create({
             data
         });
         return hero;
     }
-
-    async findAll() {
+    // ! need change for the insert error case
+    async findAll() : Promise<Hero []> {
         return await this.prisma.hero.findMany();
     }
     async update(id: number, data: HeroDto) {
@@ -28,7 +37,7 @@ export class HeroService {
         );
 
         if (!heroExist) {
-            throw new Error('Heroi dont exist');
+            return new NotFoundException('Heroi dont exist');
         }
         return await this.prisma.hero.update({
             data,
@@ -47,7 +56,7 @@ export class HeroService {
         })
         if(!heroExist)
         {
-            throw new Error("hero not found");
+            throw new NotFoundException("hero not found");
         }
         return await this.prisma.hero.delete({
             where:{
@@ -65,7 +74,7 @@ export class HeroService {
         })
         if(!hero)
         {
-            throw new Error("hero not found");
+            throw new NotFoundException("hero not found");
         }
         return hero;
     }
