@@ -4,7 +4,6 @@ import { CountryDto } from '../dtos/country.dto';
 
 @Injectable()
 export class CountryService {
-
     constructor(private readonly prismaService: PrismaService) { }
     async getAll() {
         const country = await this.prismaService.country.findMany({
@@ -19,14 +18,14 @@ export class CountryService {
     }
     async create(data: CountryDto) {
         const { name } = data
-        const existingCountry = await this.prismaService.country.findFirst(
+        const countryExists = await this.prismaService.country.findFirst(
             {
                 where: {
                     name: name,
                 }
             }
         )
-        if (existingCountry) throw new ConflictException('country already exist')
+        if (countryExists) throw new ConflictException('country already exist')
         const country = await this.prismaService.country.create(
             {
                 data,
@@ -51,15 +50,16 @@ export class CountryService {
             }
         );
     }
+    // ! not tested
     async delete(id: number) {
-        const findCountry = this.prismaService.country.findFirst(
+        const countryExists = this.prismaService.country.findFirst(
             {
                 where: {
                     id,
                 }
             }
         )
-        if (!findCountry) { throw new NotFoundException('Country not exists') };
+        if (!countryExists) { throw new NotFoundException('Country not exists') };
 
         return await this.prismaService.country.delete(
             {
@@ -68,6 +68,19 @@ export class CountryService {
                 }
             }
         )
+    }
+    // ! not tested
+    async getById(id: number){
+        const countryExist = this.prismaService.country.findFirst(
+            {
+                where:{
+                    id,
+                }
+            }
+        )
+        if (!countryExist){ throw new NotFoundException('country not exists')}
+        return countryExist;
+
     }
 
 }
