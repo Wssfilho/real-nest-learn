@@ -45,6 +45,14 @@ npx prisma init
 ``` powershell
 npx prisma migrate dev
 ```
+### Para resetar um banco de dados
+``` powershell
+npx prisma migrate reset
+```
+### Para ver o banco pelo prisma studio
+```powershell
+nox prisma studio
+```
 
 
 ### Criação do Serviço
