@@ -24,5 +24,10 @@ export class CountryController {
         return country
 
     }
+    @Get(":id")
+    async getById(@Param("id") id : number){
+        const country = this.coutryService.getById(Number(id));
+        return country;
+    }
 
 }
