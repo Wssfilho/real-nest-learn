@@ -51,7 +51,7 @@ npx prisma migrate reset
 ```
 ### Para ver o banco pelo prisma studio
 ```powershell
-nox prisma studio
+npx prisma studio
 ```
 
 
