@@ -51,5 +51,23 @@ export class CountryService {
             }
         );
     }
+    async delete(id: number) {
+        const findCountry = this.prismaService.country.findFirst(
+            {
+                where: {
+                    id,
+                }
+            }
+        )
+        if (!findCountry) { throw new NotFoundException('Country not exists') };
+
+        return await this.prismaService.country.delete(
+            {
+                where:{
+                    id,
+                }
+            }
+        )
+    }
 
 }
