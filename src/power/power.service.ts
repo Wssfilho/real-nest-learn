@@ -5,7 +5,11 @@ import { PrismaService } from 'src/databases/prisma.service';
 export class PowerService {
 
     constructor(private readonly prisma: PrismaService){}
-    
+
+
+    async getAll(){
+        return this.prisma.power.findMany();
+    }
 
 
 }
