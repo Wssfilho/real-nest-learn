@@ -3,7 +3,6 @@ import { HeroDto } from '../dtos/hero.dto';
 import { PrismaService } from 'src/databases/prisma.service';
 import { error } from 'console';
 import { Hero, power } from '@prisma/client';
-import { heroPowerDto } from 'src/dtos/heroPower.dto';
 //decorator injectable
 @Injectable()
 //o servico precisa ter injectable
@@ -89,13 +88,13 @@ export class HeroService {
         })
     }
     // ! adcionado
-    async removePower(data: heroPowerDto){
+    async removePower(idHero: number, idPower: number){
         return await this.prisma.heroPower.delete(
             {
                 where: {
                     heroId_powerId:{
-                        heroId: data.idHero,
-                        powerId: data.idPower   
+                        heroId: idHero,
+                        powerId: idPower   
                     }
                 }
             }
