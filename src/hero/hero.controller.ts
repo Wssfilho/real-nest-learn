@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { HeroDto } from '../dtos/hero.dto';
 import { HeroService } from './hero.service';
+import { heroPowerDto } from 'src/dtos/heroPower.dto';
 
 @Controller('hero')
 export class HeroController {
@@ -20,10 +21,15 @@ export class HeroController {
     async update(@Param("id") id:number, @Body( ) data:HeroDto){
         return this.heroService.update(Number (id), data);
     }
+    @Delete("deleteHeroPower")
+    async deleteheroPower(@Body() data: heroPowerDto){
+        return this.heroService.removePower(data);
+    }
     @Delete(":id")
     async delete(@Param("id") id: number){
         return this.heroService.delete(Number(id));
     }
+    
     @Get(":id")
     async getById(@Param("id") id: number)
     {
