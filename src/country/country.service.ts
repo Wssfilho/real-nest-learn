@@ -70,14 +70,9 @@ export class CountryService {
         )
     }
     // ! not tested
+    // 
     async getById(id: number){
-        const countryExist = this.prismaService.country.findFirst(
-            {
-                where:{
-                    id,
-                }
-            }
-        )
+        const countryExist = this.prismaService.country.findFirst({ where:{ id } })
         if (!countryExist){ throw new NotFoundException('country not exists')}
         return countryExist;
 
