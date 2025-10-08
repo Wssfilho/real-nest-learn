@@ -72,15 +72,6 @@ export class HeroService {
     }
 
     async delete(id: number){
-        const heroExist = await this.prisma.hero.findUnique({
-            where:{
-                id,
-            }
-        })
-        if(!heroExist)
-        {
-            throw new NotFoundException();
-        }
         return await this.prisma.hero.delete({
             where:{
                 id, 
