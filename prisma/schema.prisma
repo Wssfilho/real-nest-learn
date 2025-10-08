@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -17,7 +12,6 @@ model Country{
   id Int @id @default(autoincrement())
   name String @db.VarChar(100)
   hero Hero[]
-  
 }
 model Hero{
   id Int @id @default(autoincrement())
@@ -28,4 +22,19 @@ model Hero{
   country Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
   //obrigatorio
   countryId Int @default(1)
+  powers heroPower[]
 }
+model power{
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(100)
+  description String @db.VarChar(255)
+  heroes heroPower[]
+}
+model heroPower{
+  hero Hero @relation(fields: [heroId], references: [id], onDelete: Cascade)
+  heroId Int
+  power power @relation(fields: [powerId], references: [id], onDelete: Cascade)
+  powerId Int
+  @@id([heroId, powerId])
+}
+
