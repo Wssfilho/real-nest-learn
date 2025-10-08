@@ -5,5 +5,6 @@ export class HeroDto{
     age: number;
     team?: string;
     countryId: number;
+    powerId: number;
 
 }
