@@ -79,7 +79,7 @@ export class HeroService {
         })
         if(!heroExist)
         {
-            throw new NotFoundException("hero not found");
+            throw new NotFoundException();
         }
         return await this.prisma.hero.delete({
             where:{
@@ -88,8 +88,8 @@ export class HeroService {
         })
     }
     // ! adcionado
-    async removePower(idHero: number, idPower: number){
-        return await this.prisma.heroPower.delete(
+    removePower(idHero: number, idPower: number){
+        return this.prisma.heroPower.delete(
             {
                 where: {
                     heroId_powerId:{
@@ -110,7 +110,7 @@ export class HeroService {
         })
         if(!hero)
         {
-            throw new NotFoundException("hero not found");
+            throw new NotFoundException();
         }
         return hero;
     }
