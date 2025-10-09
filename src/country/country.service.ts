@@ -50,9 +50,8 @@ export class CountryService {
             }
         );
     }
-    // ! not tested
     async delete(id: number) {
-        const countryExists = this.prismaService.country.findFirst(
+        const countryExists = await this.prismaService.country.findFirst(
             {
                 where: {
                     id,
@@ -61,16 +60,18 @@ export class CountryService {
         )
         if (!countryExists) { throw new NotFoundException('Country not exists') };
 
-        return await this.prismaService.country.delete(
+        await this.prismaService.country.delete(
             {
                 where:{
                     id,
                 }
             }
         )
+        return{
+            message: 'country deleted successful',
+            statusCode: 200
+        }
     }
-    // ! not tested
-    // 
     async getById(id: number){
         const countryExist = this.prismaService.country.findFirst({ where:{ id } })
         if (!countryExist){ throw new NotFoundException('country not exists')}
