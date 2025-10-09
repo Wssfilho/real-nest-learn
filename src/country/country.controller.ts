@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put, Res, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put, Res, } from '@nestjs/common';
 import { CountryService } from './country.service';
 import { CountryDto } from '../dtos/country.dto';
 
@@ -28,6 +28,10 @@ export class CountryController {
     async getById(@Param("id") id : number){
         const country = this.coutryService.getById(Number(id));
         return country;
+    }
+    @Delete(":id")
+    async delete(@Param("id") id: number){
+        return this.coutryService.delete(Number(id));
     }
 
 }
