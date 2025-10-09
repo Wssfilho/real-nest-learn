@@ -36,11 +36,14 @@ export class HeroService {
                     powerId: powerId,
                 }
             }
-        )
+        );
 
+        return{
+            message: "hero created",
+            statusCode: 200,
+        }
         
         
-        return hero;
     }
     // ! junto com o poder
     async findAll() : Promise<Hero []> {
