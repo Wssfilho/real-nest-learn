@@ -17,6 +17,14 @@ export class HeroService {
                 }
             }
         )
+        const findCoutry = await this.prisma.country.findFirst(
+            {
+                where:{
+                    id: heroData.countryId
+                }
+            }
+        )
+        if(!findCoutry) throw new NotFoundException('country not found')
         if (findHero) throw new ConflictException('hero already exist')
         const hero = await this.prisma.hero.create({
             data: heroData,
