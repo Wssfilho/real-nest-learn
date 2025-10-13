@@ -8,7 +8,10 @@ import { Hero, power } from '@prisma/client';
 //o servico precisa ter injectable
 export class HeroService {
     constructor(private prisma: PrismaService) { }
-    async create(data: HeroDto) {
+
+
+    async create(data: HeroDto)
+    {
         const { powerId, ... heroData} = data
         const findHero = await this.prisma.hero.findFirst(
             {
