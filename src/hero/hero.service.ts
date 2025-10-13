@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { HeroDto } from '../dtos/hero.dto';
 import { PrismaService } from 'src/databases/prisma.service';
 import { error } from 'console';
@@ -29,7 +29,7 @@ export class HeroService {
         const hero = await this.prisma.hero.create({
             data: heroData,
         });
-        await this.prisma.heroPower.create(
+        const heroPower = await this.prisma.heroPower.create(
             {
                 data:{
                     heroId: hero.id,
@@ -37,6 +37,14 @@ export class HeroService {
                 }
             }
         );
+        if(!heroPower) {
+            // Se falhar, deletar o herói criado para manter consistência
+            await this.prisma.hero.delete({
+                where: { id: hero.id }
+            })
+            throw new InternalServerErrorException('Failed to assign power to hero')
+        }
+
 
         return{
             message: "hero created",
