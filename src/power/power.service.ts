@@ -19,6 +19,23 @@ export class PowerService {
     async getAll() {
         return this.prisma.power.findMany();
     }
+    // !not tested
+    async update(id: number, data : powerDto){
+        await this.prisma.power.update(
+            {
+                data,
+                where: {id: id}
+            }
+        )
+        return{
+            message: "update successful",
+            statusCode: 200,
+        }
+    }
+    async getById(id: number){
+        const power = this.prisma.power.findFirst({where:{id}})
+        return power;
+    }
 
 
 }
