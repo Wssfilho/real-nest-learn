@@ -1,4 +1,5 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { power } from '@prisma/client';
 import { PrismaService } from 'src/databases/prisma.service';
 import { powerDto } from 'src/dtos/power.dto';
 
@@ -8,7 +9,7 @@ export class PowerService {
     constructor(private readonly prisma: PrismaService) { }
 
     async create(data: powerDto) {
-        const findPower = await this.prisma.power.findFirst({ where: { id: data.id } });
+        const findPower = await this.prisma.power.findFirst({ where: { name: data.name } });
         if (findPower) { throw new ConflictException() }
         await this.prisma.power.create({ data })
         return {
@@ -20,21 +21,59 @@ export class PowerService {
         return this.prisma.power.findMany();
     }
     // !not tested
-    async update(id: number, data : powerDto){
+    async update(id: number, data: powerDto) {
+        const power = await this.prisma.power.findUnique(
+            {
+                where:{
+                    id,
+                },
+            }
+        )
+        if(!power) throw new NotFoundException();
         await this.prisma.power.update(
             {
                 data,
-                where: {id: id}
+                where: { id: id }
             }
         )
-        return{
+        return {
             message: "update successful",
             statusCode: 200,
         }
     }
-    async getById(id: number){
-        const power = this.prisma.power.findFirst({where:{id}})
+    async getById(id: number) {
+        const power = await this.prisma.power.findUnique({ where: { id } })
+        if(!power) throw new NotFoundException();
         return power;
+    }
+    async delete(id: number) {
+        const power = await this.prisma.power.findUnique({
+            where: {
+                id,
+            }
+        })
+        if (!power) {
+            throw new NotFoundException();
+        }
+        await this.prisma.power.delete({ where: { id } });
+        return({
+            message: "delete successfull",
+            statusCode: 200,
+        });
+    }
+    async powerHero(): Promise<power[]> {
+        return await this.prisma.power.findMany(
+            {
+                include: {
+                    heroes: {
+                        include: {
+                            hero: true,
+                        }
+                    }
+                }
+
+            }
+        )
     }
 
 
