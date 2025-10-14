@@ -113,7 +113,7 @@ export class HeroService {
             }
         )
     }
-    //promessa
+    //promise is return garantee that have anything of the system
     async getById(id: number) : Promise<Hero>
     {
         const hero = await this.prisma.hero.findUnique({
