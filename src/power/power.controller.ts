@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { PowerService } from './power.service';
 import { powerDto } from 'src/dtos/power.dto';
 import { power } from '@prisma/client';
@@ -26,6 +26,10 @@ export class PowerController {
     @Get(":id")
     async getById(@Param("id") id: number){
         return this.powerService.getById(Number(id));
+    }
+    @Delete(":id")
+    async delete(@Param("id") id: number){
+        return this.powerService.delete(Number(id));
     }
 
 
