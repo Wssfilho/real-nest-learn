@@ -56,7 +56,6 @@ export class HeroService {
         
         
     }
-    // ! junto com o poder
     async findAll() : Promise<Hero []> {
         return await this.prisma.hero.findMany(
             {
@@ -100,9 +99,8 @@ export class HeroService {
             }
         })
     }
-    // ! adcionado
-    removePower(idHero: number, idPower: number){
-        return this.prisma.heroPower.delete(
+    async removePower(idHero: number, idPower: number){
+        return await this.prisma.heroPower.delete(
             {
                 where: {
                     heroId_powerId:{
