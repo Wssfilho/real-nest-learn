@@ -10,13 +10,13 @@ datasource db {
 }
 model Country{
   id Int @id @default(autoincrement())
-  name String @db.VarChar(100)
+  name String @db.VarChar(100) @unique
   hero Hero[]
 }
 model Hero{
   id Int @id @default(autoincrement())
   civilName String @db.VarChar(100)
-  heroName String @db.VarChar(100)
+  heroName String @db.VarChar(100) @unique
   age Int
   team String? @db.VarChar(100)
   country Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
@@ -26,13 +26,13 @@ model Hero{
 }
 model power{
   id Int @id @default(autoincrement())
-  name String @db.VarChar(100)
+  name String @db.VarChar(100) @unique
   description String @db.VarChar(255)
   heroes heroPower[]
 }
 model heroPower{
   hero Hero @relation(fields: [heroId], references: [id], onDelete: Cascade)
-  heroId Int
+  heroId Int 
   power power @relation(fields: [powerId], references: [id], onDelete: Cascade)
   powerId Int
   @@id([heroId, powerId])
