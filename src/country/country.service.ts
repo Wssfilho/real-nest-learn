@@ -13,7 +13,7 @@ export class CountryService {
             }
 
         });
-        if (!country) throw new NotFoundException('country not exist')
+        //if (!country) throw new NotFoundException('country not exist')
         return country;
     }
     async create(data: CountryDto) {
@@ -73,7 +73,7 @@ export class CountryService {
         }
     }
     async getById(id: number){
-        const countryExist = this.prismaService.country.findFirst({ where:{ id } })
+        const countryExist = await this.prismaService.country.findFirst({ where:{ id } })
         if (!countryExist){ throw new NotFoundException('country not exists')}
         return countryExist;
 
