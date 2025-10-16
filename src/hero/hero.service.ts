@@ -10,9 +10,8 @@ export class HeroService {
     constructor(private prisma: PrismaService) { }
 
 
-    async create(data: HeroDto)
-    {
-        const { powerId, ... heroData} = data
+    async create(data: HeroDto) {
+        const { powerId, ...heroData } = data
         const findHero = await this.prisma.hero.findFirst(
             {
                 where: {
@@ -22,55 +21,49 @@ export class HeroService {
         )
         const findCoutry = await this.prisma.country.findFirst(
             {
-                where:{
+                where: {
                     id: heroData.countryId
                 }
             }
         )
-        if(!findCoutry) throw new NotFoundException('country not found')
+        if (!findCoutry) throw new NotFoundException('country not found')
         if (findHero) throw new ConflictException('hero already exist')
-        const hero = await this.prisma.hero.create({
-            data: heroData,
-        });
-        const heroPower = await this.prisma.heroPower.create(
-            {
-                data:{
-                    heroId: hero.id,
-                    powerId: powerId,
+        const powerExists = await this.prisma.power.findUnique({ where: { id: powerId } });
+        if (!powerExists) throw new NotFoundException();
+        await this.prisma.$transaction(async (tx) => {
+
+            const hero = await tx.hero.create({ data: heroData });
+            await tx.heroPower.create(
+                {
+                    data: {
+                        heroId: hero.id,
+                        powerId: powerId,
+                    }
                 }
-            }
-        );
-        if(!heroPower) {
-            // Se falhar, deletar o herói criado para manter consistência
-            await this.prisma.hero.delete({
-                where: { id: hero.id }
-            })
-            throw new InternalServerErrorException('Failed to assign power to hero')
-        }
-
-
-        return{
+            );
+        });
+        return {
             message: "hero created",
             statusCode: 200,
         }
-        
-        
+
+
     }
-    async findAll() : Promise<Hero []> {
+    async findAll(): Promise<Hero[]> {
         return await this.prisma.hero.findMany(
             {
-                include:{
-                    powers:{
-                        include:{
+                include: {
+                    powers: {
+                        include: {
                             power: true,
                         }
                     }
                 }
             }
         );
-        
+
     }
-   
+
     async update(id: number, data: HeroDto) {
         const heroExist = await this.prisma.hero.findUnique(
             {
@@ -92,35 +85,33 @@ export class HeroService {
         })
     }
 
-    async delete(id: number){
+    async delete(id: number) {
         return await this.prisma.hero.delete({
-            where:{
-                id, 
+            where: {
+                id,
             }
         })
     }
-    async removePower(idHero: number, idPower: number){
+    async removePower(idHero: number, idPower: number) {
         return await this.prisma.heroPower.delete(
             {
                 where: {
-                    heroId_powerId:{
+                    heroId_powerId: {
                         heroId: idHero,
-                        powerId: idPower   
+                        powerId: idPower
                     }
                 }
             }
         )
     }
     //promise is return garantee that have anything of the system
-    async getById(id: number) : Promise<Hero>
-    {
+    async getById(id: number): Promise<Hero> {
         const hero = await this.prisma.hero.findUnique({
-            where:{
+            where: {
                 id,
             },
         })
-        if(!hero)
-        {
+        if (!hero) {
             throw new NotFoundException();
         }
         return hero;
