@@ -31,6 +31,10 @@ export class PowerController {
     async delete(@Param("id") id: number){
         return this.powerService.delete(Number(id));
     }
+    @Get()
+    async powerHero(): Promise<power []>{
+        return this.powerService.powerHero();
+    }
 
 
 }
