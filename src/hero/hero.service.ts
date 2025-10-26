@@ -1,4 +1,9 @@
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { HeroDto } from '../dtos/hero.dto';
 import { PrismaService } from 'src/databases/prisma.service';
 import { error } from 'console';
@@ -7,113 +12,97 @@ import { Hero, power } from '@prisma/client';
 @Injectable()
 //o servico precisa ter injectable
 export class HeroService {
-    constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
+  async create(data: HeroDto) {
+    const { powerId, ...heroData } = data;
+    const findHero = await this.prisma.hero.findFirst({
+      where: {
+        heroName: heroData.heroName,
+      },
+    });
+    const findCoutry = await this.prisma.country.findFirst({
+      where: {
+        id: heroData.countryId,
+      },
+    });
+    if (!findCoutry) throw new NotFoundException('country not found');
+    if (findHero) throw new ConflictException('hero already exist');
+    const powerExists = await this.prisma.power.findUnique({
+      where: { id: powerId },
+    });
+    if (!powerExists) throw new NotFoundException();
+    await this.prisma.$transaction(async (tx) => {
+      const hero = await tx.hero.create({ data: heroData });
+      await tx.heroPower.create({
+        data: {
+          heroId: hero.id,
+          powerId: powerId,
+        },
+      });
+    });
+    return {
+      message: 'hero created',
+      statusCode: 200,
+    };
+  }
+  async findAll(): Promise<Hero[]> {
+    return await this.prisma.hero.findMany({
+      include: {
+        powers: {
+          include: {
+            power: true,
+          },
+        },
+      },
+    });
+  }
 
-    async create(data: HeroDto) {
-        const { powerId, ...heroData } = data
-        const findHero = await this.prisma.hero.findFirst(
-            {
-                where: {
-                    heroName: heroData.heroName,
-                }
-            }
-        )
-        const findCoutry = await this.prisma.country.findFirst(
-            {
-                where: {
-                    id: heroData.countryId
-                }
-            }
-        )
-        if (!findCoutry) throw new NotFoundException('country not found')
-        if (findHero) throw new ConflictException('hero already exist')
-        const powerExists = await this.prisma.power.findUnique({ where: { id: powerId } });
-        if (!powerExists) throw new NotFoundException();
-        await this.prisma.$transaction(async (tx) => {
+  async update(id: number, data: HeroDto) {
+    const heroExist = await this.prisma.hero.findUnique({
+      where: {
+        id,
+      },
+    });
 
-            const hero = await tx.hero.create({ data: heroData });
-            await tx.heroPower.create(
-                {
-                    data: {
-                        heroId: hero.id,
-                        powerId: powerId,
-                    }
-                }
-            );
-        });
-        return {
-            message: "hero created",
-            statusCode: 200,
-        }
-
-
+    if (!heroExist) {
+      return new NotFoundException('Heroi dont exist');
     }
-    async findAll(): Promise<Hero[]> {
-        return await this.prisma.hero.findMany(
-            {
-                include: {
-                    powers: {
-                        include: {
-                            power: true,
-                        }
-                    }
-                }
-            }
-        );
+    return await this.prisma.hero.update({
+      data,
+      where: {
+        id,
+      },
+    });
+  }
 
+  async delete(id: number) {
+    return await this.prisma.hero.delete({
+      where: {
+        id,
+      },
+    });
+  }
+  async removePower(idHero: number, idPower: number) {
+    return await this.prisma.heroPower.delete({
+      where: {
+        heroId_powerId: {
+          heroId: idHero,
+          powerId: idPower,
+        },
+      },
+    });
+  }
+  //promise is return garantee that have anything of the system
+  async getById(id: number): Promise<Hero> {
+    const hero = await this.prisma.hero.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!hero) {
+      throw new NotFoundException();
     }
-
-    async update(id: number, data: HeroDto) {
-        const heroExist = await this.prisma.hero.findUnique(
-            {
-                where: {
-                    id,
-                }
-            }
-        );
-
-        if (!heroExist) {
-            return new NotFoundException('Heroi dont exist');
-        }
-        return await this.prisma.hero.update({
-            data,
-            where:
-            {
-                id,
-            }
-        })
-    }
-
-    async delete(id: number) {
-        return await this.prisma.hero.delete({
-            where: {
-                id,
-            }
-        })
-    }
-    async removePower(idHero: number, idPower: number) {
-        return await this.prisma.heroPower.delete(
-            {
-                where: {
-                    heroId_powerId: {
-                        heroId: idHero,
-                        powerId: idPower
-                    }
-                }
-            }
-        )
-    }
-    //promise is return garantee that have anything of the system
-    async getById(id: number): Promise<Hero> {
-        const hero = await this.prisma.hero.findUnique({
-            where: {
-                id,
-            },
-        })
-        if (!hero) {
-            throw new NotFoundException();
-        }
-        return hero;
-    }
+    return hero;
+  }
 }
