@@ -1,6 +1,5 @@
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["relationJoins"]
 }
 
@@ -8,33 +7,37 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model Country{
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(100) @unique
+
+model Country {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(100)
   hero Hero[]
 }
-model Hero{
-  id Int @id @default(autoincrement())
-  civilName String @db.VarChar(100)
-  heroName String @db.VarChar(100) @unique
-  age Int
-  team String? @db.VarChar(100)
-  country Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
+
+model Hero {
+  id        Int         @id @default(autoincrement())
+  civilName String      @db.VarChar(100)
+  heroName  String      @unique @db.VarChar(100)
+  age       Int
+  team      String?     @db.VarChar(100)
+  country   Country     @relation(fields: [countryId], references: [id], onDelete: Cascade)
   //obrigatorio
-  countryId Int @default(1)
-  powers heroPower[]
-}
-model power{
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(100) @unique
-  description String @db.VarChar(255)
-  heroes heroPower[]
-}
-model heroPower{
-  hero Hero @relation(fields: [heroId], references: [id], onDelete: Cascade)
-  heroId Int 
-  power power @relation(fields: [powerId], references: [id], onDelete: Cascade)
-  powerId Int
-  @@id([heroId, powerId])
+  countryId Int         @default(1)
+  heroPower heroPower[]
 }
 
+model power {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique @db.VarChar(100)
+  description String      @db.VarChar(255)
+  heroes      heroPower[]
+}
+
+model heroPower {
+  hero    Hero  @relation(fields: [heroId], references: [id], onDelete: Cascade)
+  heroId  Int
+  power   power @relation(fields: [powerId], references: [id], onDelete: Cascade)
+  powerId Int
+
+  @@id([heroId, powerId])
+}
