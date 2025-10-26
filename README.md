@@ -69,6 +69,9 @@ nest generate controller hero
 nest generate module hero
 ```
 
+### Algumas configuraçãoes:
+- No tsconfig colocar o strictNullCheck como true, e criar um strict como true  
+
 
 
 
