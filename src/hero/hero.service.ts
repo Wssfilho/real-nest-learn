@@ -6,8 +6,7 @@ import {
 } from '@nestjs/common';
 import { HeroDto } from '../dtos/hero.dto';
 import { PrismaService } from 'src/databases/prisma.service';
-import { error } from 'console';
-import { Hero, power } from '@prisma/client';
+import { Hero } from '@prisma/client';
 //decorator injectable
 @Injectable()
 //o servico precisa ter injectable
