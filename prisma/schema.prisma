@@ -23,7 +23,7 @@ model Hero {
   country   Country     @relation(fields: [countryId], references: [id], onDelete: Cascade)
   //obrigatorio
   countryId Int         @default(1)
-  heroPower heroPower[]
+  powers    heroPower[]
 }
 
 model power {

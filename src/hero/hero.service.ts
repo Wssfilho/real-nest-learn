@@ -2,10 +2,10 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { HeroDto } from '../dtos/hero.dto';
-import { PrismaService } from 'src/databases/prisma.service';
-import { Hero } from '@prisma/client';
+} from "@nestjs/common";
+import { HeroDto } from "../dtos/hero.dto";
+import { PrismaService } from "src/databases/prisma.service";
+import { Hero } from "@prisma/client";
 //decorator injectable
 @Injectable()
 //o servico precisa ter injectable
@@ -24,8 +24,8 @@ export class HeroService {
         id: heroData.countryId,
       },
     });
-    if (!findCoutry) throw new NotFoundException('country not found');
-    if (findHero) throw new ConflictException('hero already exist');
+    if (!findCoutry) throw new NotFoundException("country not found");
+    if (findHero) throw new ConflictException("hero already exist");
     const powerExists = await this.prisma.power.findUnique({
       where: { id: powerId },
     });
@@ -40,7 +40,7 @@ export class HeroService {
       });
     });
     return {
-      message: 'hero created',
+      message: "hero created",
       statusCode: 200,
     };
   }
@@ -64,7 +64,7 @@ export class HeroService {
     });
 
     if (!heroExist) {
-      return new NotFoundException('Heroi dont exist');
+      return new NotFoundException("Heroi dont exist");
     }
     return await this.prisma.hero.update({
       data,
