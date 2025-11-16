@@ -10,7 +10,7 @@ import { powerDto } from "src/dtos/power.dto";
 @Injectable()
 export class PowerService {
   constructor(private readonly prisma: PrismaService) {}
-
+  //add create power
   async create(data: powerDto) {
     const findPower = await this.prisma.power.findFirst({
       where: { name: data.name },
