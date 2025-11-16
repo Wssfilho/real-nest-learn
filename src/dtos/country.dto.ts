@@ -1,4 +1,4 @@
 export class CountryDto {
   id?: number;
-  name: string;
+  name!: string;
 }
