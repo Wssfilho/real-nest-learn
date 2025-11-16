@@ -3,16 +3,16 @@ import {
   Injectable,
   NotFoundException,
   Response,
-} from '@nestjs/common';
-import { PrismaService } from 'src/databases/prisma.service';
-import { CountryDto } from '../dtos/country.dto';
+} from "@nestjs/common";
+import { PrismaService } from "src/databases/prisma.service";
+import { CountryDto } from "../dtos/country.dto";
 
 @Injectable()
 export class CountryService {
   constructor(private readonly prismaService: PrismaService) {}
   async getAll() {
     const country = await this.prismaService.country.findMany({
-      relationLoadStrategy: 'join',
+      relationLoadStrategy: "join",
       include: {
         hero: true,
       },
@@ -27,7 +27,7 @@ export class CountryService {
         name: name,
       },
     });
-    if (countryExists) throw new ConflictException('country already exist');
+    if (countryExists) throw new ConflictException("country already exist");
     const country = await this.prismaService.country.create({
       data,
     });
@@ -38,7 +38,7 @@ export class CountryService {
       where: { id },
     });
     if (!countryExist) {
-      throw new NotFoundException('Country not exists');
+      throw new NotFoundException("Country not exists");
     }
     return await this.prismaService.country.update({
       where: {
@@ -54,7 +54,7 @@ export class CountryService {
       },
     });
     if (!countryExists) {
-      throw new NotFoundException('Country not exists');
+      throw new NotFoundException("Country not exists");
     }
 
     await this.prismaService.country.delete({
@@ -63,7 +63,7 @@ export class CountryService {
       },
     });
     return {
-      message: 'country deleted successful',
+      message: "country deleted successful",
       statusCode: 200,
     };
   }
@@ -72,7 +72,7 @@ export class CountryService {
       where: { id },
     });
     if (!countryExist) {
-      throw new NotFoundException('country not exists');
+      throw new NotFoundException("country not exists");
     }
     return countryExist;
   }
