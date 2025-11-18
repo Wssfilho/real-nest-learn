@@ -27,7 +27,7 @@ export class PowerService {
   async getAll() {
     return this.prisma.power.findMany();
   }
-  // !not tested
+  // tested
   async update(id: number, data: powerDto) {
     const power = await this.prisma.power.findUnique({
       where: {
@@ -75,4 +75,5 @@ export class PowerService {
       },
     });
   }
+  
 }
