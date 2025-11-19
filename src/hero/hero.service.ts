@@ -105,4 +105,7 @@ export class HeroService {
     }
     return hero;
   }
+  async totalHero() {
+    return this.prisma.hero.count();
+  }
 }

@@ -18,9 +18,14 @@ export class HeroController {
   async create(@Body() data: HeroDto) {
     return this.heroService.create(data);
   }
+
   @Get()
   async findAll() {
     return this.heroService.findAll();
+  }
+  @Get("total/")
+  async totalHero() {
+    return this.heroService.totalHero();
   }
   //forma de usar o parametro passado pela url
   @Put(":id")
@@ -43,4 +48,5 @@ export class HeroController {
   async getById(@Param("id") id: number) {
     return this.heroService.getById(Number(id));
   }
+  
 }
