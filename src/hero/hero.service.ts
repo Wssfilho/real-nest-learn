@@ -13,7 +13,7 @@ export class HeroService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: HeroDto) {
-    const { powerId, ...heroData } = data;
+    const { powerId, missionId, ...heroData } = data;
     const findHero = await this.prisma.hero.findFirst({
       where: {
         heroName: heroData.heroName,
@@ -31,7 +31,9 @@ export class HeroService {
     });
     if (!powerExists) throw new NotFoundException();
     await this.prisma.$transaction(async (tx) => {
-      const hero = await tx.hero.create({ data: heroData });
+      const hero = await tx.hero.create({
+        data: missionId ? { ...heroData, missionId } : heroData,
+      });
       await tx.heroPower.create({
         data: {
           heroId: hero.id,
