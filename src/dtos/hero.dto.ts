@@ -6,4 +6,5 @@ export class HeroDto {
   team?: string;
   countryId: number;
   powerId: number;
+  missionId: number;
 }
