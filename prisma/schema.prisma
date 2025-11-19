@@ -24,6 +24,9 @@ model Hero {
   //obrigatorio
   countryId Int         @default(1)
   powers    heroPower[]
+  //relacionamento um para muitos com missões (uma missão pode ter vários heróis)
+  missions  Mission     @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  missionId Int
 }
 
 model power {
@@ -40,4 +43,12 @@ model heroPower {
   powerId Int
 
   @@id([heroId, powerId])
+}
+
+model Mission {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  duration    DateTime
+  description String   @db.VarChar(255)
+  hero        Hero[]
 }
