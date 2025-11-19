@@ -1,4 +1,9 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { Mission } from "@prisma/client";
 import { PrismaService } from "src/databases/prisma.service";
 import { missionDto } from "src/dtos/mission.dto";
 
@@ -15,5 +20,10 @@ export class MissionService {
     return this.prisma.mission.create({
       data,
     });
+  }
+  async findAll(): Promise<Mission[]> {
+    const mission = this.prisma.mission.findMany();
+    if (!mission) throw NotFoundException;
+    return mission;
   }
 }
