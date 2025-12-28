@@ -5,6 +5,9 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+generator client {
+  provider = "prisma-client-js"
+}
 
 model Country {
   id   Int    @id @default(autoincrement())
