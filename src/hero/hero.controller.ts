@@ -48,5 +48,4 @@ export class HeroController {
   async getById(@Param("id") id: number) {
     return this.heroService.getById(Number(id));
   }
-  
 }
