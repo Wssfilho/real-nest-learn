@@ -35,7 +35,7 @@ export class HeroController {
   @Delete(":heroId/power/:powerId")
   async deleteheroPower(
     @Param("heroId") heroId: number,
-    @Param("powerId") powerId: number
+    @Param("powerId") powerId: number,
   ) {
     return this.heroService.removePower(Number(heroId), Number(powerId));
   }
