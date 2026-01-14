@@ -80,7 +80,7 @@ export class CountryService {
     const nome = this.prismaService.country.findMany({
       where: { id },
     });
-    if (!nome) throw new NotFoundException();
+    if ((await nome).length === 0) throw new NotFoundException();
     return nome;
   }
 }
